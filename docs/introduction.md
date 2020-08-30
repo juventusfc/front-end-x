@@ -1,3 +1,66 @@
 # 前端之路
 
-这是一个前端知识体系，包括 JavaScript、CSS、HTML、浏览器工作原理、编程训练、组件化以及工具链。
+这是一个前端知识体系，包括前端技术、编程训练、组件化以及工具链。
+
+其中，前端技术主要包括：
+
+- JavaScript
+  - Grammar 文法
+    - Lexical 词法
+      - WhiteSpace
+      - LineTerminator
+      - Comment
+      - Token
+        - Identifier
+        - Keywords
+        - Punctuator
+        - NumericLiteral
+        - StringLiteral
+        - RegularExpressionLiteral
+        - Template
+    - Syntax 语法
+      - Atom
+      - Expression
+      - Structure
+      - Script & Module
+  - Semantics 语义
+  - Runtime 运行时
+    - Type
+      - Number
+      - String
+      - Boolean
+      - Null
+      - Undefined
+      - Object
+      - Symbol
+      - 内部类型
+        - Reference
+        - Completion Record
+    - 执行过程
+      - Job
+      - Script/Module
+      - Promise
+      - Function
+      - Statement
+      - Expression
+      - Literal
+      - Identifier
+- CSS
+- HTML
+  - HTML 作为计算机语言
+    - 语法
+    - 词法
+  - HTML 作为 SGML
+    - DTD 用于定义 HTML 可以用的标签、属性等。HTML 5 已经抛弃了这个东西，只用于致敬。
+    - Entity 用于定义无法打印的字符或定义 HTML 中的保留字
+  - HTML 作为 XML
+    - Namespace 命名空间，用于区分不同 DTD 下相同的元素和属性
+      - svg
+      - mathml
+      - aria
+      - xhtml
+    - Tag 用于描述网页的内容
+- 宿主环境中的 API
+  - Browser
+  - Node
+  - 小程序
