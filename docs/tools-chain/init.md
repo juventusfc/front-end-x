@@ -12,6 +12,8 @@ yeoman 是用于生成脚手架的脚手架。yeoman 的重点集中在：
 - managing dependencies： 脚手架生成的项目中的依赖
 - file system： 脚手架生成的项目中的文件
 
+### 搭建 frank
+
 为了快速学习，我们可以使用 yeoman 搭建一个简单的 frank 脚手架：
 
 1. 生成一个新的 node 项目，名字为 generator-frank。注意，脚手架需要符合 generator-XXX 规范
@@ -29,6 +31,16 @@ yeoman 是用于生成脚手架的脚手架。yeoman 的重点集中在：
 2. 执行 `yo frank`，相当于使用 frank 这个脚手架生成项目。类似于 create-react-app。
 
 [点击这里获取源码](https://github.com/juventusfc/tools-chain-generator-frank)
+
+### 搭建 toy-tool
+
+搭建 toy-tool 步骤主要有：
+
+1. 生成 `package.json`
+2. 安装依赖
+3. 复制模板
+
+[点击这里获取源码](https://github.com/juventusfc/tools-chain-generator-toytool)
 
 ## 搭建 console-toolkit
 
