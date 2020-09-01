@@ -12,5 +12,6 @@
   - [publish 阶段的工具](./tools-chain/publish)
 - [持续集成](./tools-chain/publish)
 - **资源**
+- [编程语言通识](./resources/编程语言通识)
 - [Q&A](./resources/Q-A)
 - [工具链仓库](./resources/tools-chain)
