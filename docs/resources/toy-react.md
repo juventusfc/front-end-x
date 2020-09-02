@@ -171,3 +171,5 @@ function setAttribute(dom, key, value) {
   }
 }
 ```
+
+从 render 方法我们也可以看出，在构建真实 DOM 树时，是按照先序、深度优先的遍历方式，先构建子节点的真实 DOM 的。
