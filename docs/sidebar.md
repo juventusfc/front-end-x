@@ -1,5 +1,7 @@
 - [简介](introduction)
 - [JavaScript](./JavaScript/index)
+  - [词法分析](./JavaScript/lexical)
+  - [类型](./JavaScript/type)
 - [CSS](./CSS/index)
 - [HTML](./HTML/index)
 - [浏览器工作原理](./browser/index)
