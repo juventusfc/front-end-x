@@ -2,6 +2,18 @@
 
 类型在**文法**和**运行时**中都会涉及。
 
+## Undefined 类型
+
+语义表示未定义，只有一个值：undefined。由于设计 JavaScript 时的失误，在某个阶段，undefined 作为了一个变量，所以老代码中用 `void 0;` 来表示 undefined。
+
+## Null 类型
+
+语义表示空值，只有一个值：null。
+
+## Boolean 类型
+
+只有两个值：false 和 true，表示逻辑上的真和假
+
 ## Number 类型
 
 Number 类型符合 IEEE 754-2008 规定的双精度 64 位浮点数规则。

@@ -49,6 +49,45 @@ token 就是除了上面三种，留下来的有效信息。
   - Numeric Literal 数字直接量
   - String Literal 字符串直接量，就是我们用单引号或者双引号引起来的直接量
   - Template Literal 字符串模板，用反引号括起来的直接量 `a${b}c${d}e`
-  - 正则表达式直接量 Regular Expression Literal，`/RegularExpressionBody/g`
   - Null Literals
   - Boolean Literals
+  - Regular Expression Literal 正则表达式直接量 ，`/RegularExpressionBody/g`
+
+## 自动插入分号规则
+
+- 有换行符，且下一个符号是不符合语法的，那么就尝试插入分号
+
+  ```text
+  let a = 1
+  void function(a){
+      console.log(a);
+  }(a);
+  ```
+
+  上面，1void 不合法
+
+- 有换行符，且语法中规定此处不能有换行符，那么就自动插入分号
+
+  ```text
+  var a = 1, b = 1, c = 1;
+  a
+  ++
+  b
+  ++
+  c
+  ```
+
+  第二行 a 后面有换行符，`a 换行符 ++` 这种是不合法的，所以会在第二行 a 后面加上分号。这就是 no LineTerminator here 规则:
+
+  - 带标签的 continue 语句，不能在 continue 后插入换行
+  - 带标签的 break 语句，不能在 break 后插入换行
+  - return 后不能插入换行
+  - 后自增、后自减运算符前不能插入换行
+  - throw 和 Exception 之间不能插入换行
+  - 凡是 async 关键字，后面都不能插入换行
+  - 箭头函数的箭头前，也不能插入换行
+  - yield 之后，不能插入换行
+
+- 源代码结束处，不能形成完整的脚本或者模块结构，那么就自动插入分号
+
+在工作中，可以使用 `prettier` 等工具，配置全局的代码形式。
