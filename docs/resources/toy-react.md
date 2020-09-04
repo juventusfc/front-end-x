@@ -59,7 +59,7 @@ createElement(tag, attrs, ...children);
 - attrs 是一个对象，包含了所有属性
 - children 是所有子节点
 
-createElement 方法要做的事情也很简单，只要它能接收参数并返回一个对象，这个对象也就是虚拟 DOM：
+createElement 方法要做的事情也很简单，只要它能接收参数并返回一个对象，这个对象也就是虚拟 DOM（vNode）：
 
 ```javascript
 function createElement(tag, attrs, ...children) {
@@ -94,7 +94,7 @@ console.log(element);
 ReactDOM.render(element, document.getElementById("root"));
 ```
 
-可以注意到此时 element 是：
+可以注意到此时 vNode 是：
 
 ```json
 {
@@ -173,3 +173,71 @@ function setAttribute(dom, key, value) {
 ```
 
 从 render 方法我们也可以看出，在构建真实 DOM 树时，是按照先序、深度优先的遍历方式，先构建子节点的真实 DOM 的。
+
+### 支持自定义组件
+
+细心的你应该已经发现，上面的代码只支持了 HTML 原生的元素。但是，如果要跟 React 一样自定义组件，要如何实现呢？
+
+比如，我们现在写了一个 Welcome 组件（先忽略组件的设计），然后在 `main.js` 中调用：
+
+```javascript
+class Welcome {
+  render() {
+    return <h1>hello frank</h1>;
+  }
+}
+
+const element = <Welcome />;
+```
+
+当这个 JSX 被解析后，生成的 vNode 是：
+
+```javascript
+{
+  attrs: null,
+  children: [],
+  tag: ƒ Welcome()
+}
+```
+
+此时， `vNodeToDom.js` 是不支持的。需要添加额外的一种分支情况：
+
+```javascript
+// vNodeToDom.js
+{
+  // ...
+  if (typeof vNode.tag === "function") {
+    return componentVNodeToDom(vNode);
+  }
+  // ...
+}
+```
+
+`componentVNodeToDom.js` 顾名思义，就是将 component 形式的 vNode 转化为 DOM：
+
+```javascript
+// componentVNodeToDom.js
+function componentVNodeToDom(vNode) {
+  const component = vNodeToComponent(vNode);
+  const dom = componentToDom(component);
+
+  return dom;
+}
+```
+
+其中， `vNodeToComponent.js` 是将 vNode 转化为 component 对象， `componentToDom.js` 是将 component 对象转化为 DOM：
+
+```javascript
+// vNodeToComponent.js
+function vNodeToComponent(vNode) {
+  return new vNode.tag();
+}
+
+// componentToDom.js
+function componentToDom(component) {
+  const vNode = component.render();
+  return vNodeToDom(vNode);
+}
+```
+
+这样，自定义组件也就能渲染到页面上了。
