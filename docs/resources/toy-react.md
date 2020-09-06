@@ -241,3 +241,5 @@ function componentToDom(component) {
 ```
 
 这样，自定义组件也就能渲染到页面上了。
+
+## 增加 props 和 state

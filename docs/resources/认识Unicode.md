@@ -112,7 +112,7 @@ A number representing the UTF-16 code unit value of the character at the given i
 
 ### `str.charAt(index)`
 
-返回 index 码点对应的字符，适用于 UTF-16。
+返回 index 处对应的字符，适用于 UTF-16。
 
 **Parameters**
 
