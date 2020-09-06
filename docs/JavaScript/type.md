@@ -59,3 +59,21 @@ Template::
 词法中，转义符是经常使用的方法。
 
 String 类型永远无法变更，在运行时内存中使用 UTF-16 进行编码。
+
+## Object 类型
+
+见 [Object 类型](./object.md)
+
+## 判断类型的方法
+
+- `typeof`
+
+  判断是何种基本类型。
+
+- `object instanceof constructor`
+
+  针对 Object 类型，获得具体属于 Object 类型下的某一种。判断原型链，判断是不是属于某种 Object 类型。
+
+- `Object.prototype.toString.call(xxx)`
+
+  call 也会产生装箱操作。

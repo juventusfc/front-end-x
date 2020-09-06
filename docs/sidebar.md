@@ -2,6 +2,7 @@
 - [JavaScript](./JavaScript/index)
   - [词法分析](./JavaScript/lexical)
   - [类型](./JavaScript/type)
+  - [Object 类型](./JavaScript/object)
   - [类型转换](./JavaScript/type-convert)
   - [表达式](./JavaScript/expression)
   - [语句](./JavaScript/statement)

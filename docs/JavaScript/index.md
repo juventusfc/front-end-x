@@ -6,6 +6,8 @@
   - grammar
     - `lexical.md`
     - `type.md`
+  - grammar && runtime
+    - `object.md`
   - runtime
     - `type-convert.md`
 - Expression
@@ -14,4 +16,3 @@
 - Statement
   - grammar && runtime
     - `statement.md`
-    - `object.md`
