@@ -4,6 +4,7 @@
   - [类型](./JavaScript/type)
   - [类型转换](./JavaScript/type-convert)
   - [表达式](./JavaScript/expression)
+  - [语句](./JavaScript/statement)
 - [CSS](./CSS/index)
 - [HTML](./HTML/index)
 - [浏览器工作原理](./browser/index)
