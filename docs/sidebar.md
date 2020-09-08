@@ -6,6 +6,7 @@
   - [类型转换](./JavaScript/type-convert)
   - [表达式](./JavaScript/expression)
   - [语句](./JavaScript/statement)
+  - [结构化程序设计和执行过程](./JavaScript/structual)
 - [CSS](./CSS/index)
 - [HTML](./HTML/index)
 - [浏览器工作原理](./browser/index)

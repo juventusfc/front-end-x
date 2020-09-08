@@ -62,7 +62,7 @@ String 类型永远无法变更，在运行时内存中使用 UTF-16 进行编�
 
 ## Object 类型
 
-见 [Object 类型](./object.md)
+见 Object 类型。
 
 ## 判断类型的方法
 

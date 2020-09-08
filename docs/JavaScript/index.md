@@ -16,3 +16,6 @@
 - Statement
   - grammar && runtime
     - `statement.md`
+- Structual
+  - grammar && runtime
+    - `structual.md`
