@@ -83,16 +83,7 @@ var o = {
 - prototype 是构造函数的一个属性
 - [[prototype]] 是对象的一个私有字段，也就是原型
 
-当我们访问属性时，如果当前对象没有，则会沿着原型找原型对象是否有此名称的属性，而原型对象还可能有原型。因此，会有**原型链**这一说法 。这一算法保证了每个对象只需要描述自己和原型的区别即可 。
-
-操纵原型的方法：
-
-- 根据指定的原型创建新对象，原型可以是 null
-  - `Object.create()`
-- 获得原型
-  - `Object.getPrototypeOf()`
-- 设置原型
-  - `Object.setPrototypeOf()`
+当我们访问属性时，如果当前对象没有，则会沿着原型找原型对象是否有此名称的属性，而原型对象还可能有原型。因此，会有**原型链**这一说法。这一算法保证了每个对象只需要描述自己和原型的区别即可。
 
 ## ES6 中的类
 
@@ -100,24 +91,40 @@ ES6 引入 class 之后，基于类的编程方式也成为了 JavaScript 的官
 
 为了避免蹩脚的 `new 构造器对象`的形式 ，令 function 回归原本的函数语义,当我们使用类的思想来设计代码时，应该尽量使用 class 来声明类，而不是用旧语法拿函数来模拟对象。class 关键字和箭头运算符可以完全替代旧的 function 关键字，这更明确地区分了定义函数和定义类两种意图
 
-## 创建方式
+## 面向对象的 API
 
-- 字面量
-  - `var o = []`
-  - `var o = {}`
-  - `var o = /abc/`
-- new
-  - `var o = new Object();`
-- dom api
-  - `var o = document.createElement("div")`
-- 通过内置对象
-  - `var o = Object.create()`
-  - `var o = Object.assign({},{name: "frank"})`
-  - `var o = JSON.parse("{}")`
-- 通过装箱
-  - `var o = Object()`
+- 基本的对象能力
+  - 创建对象
+    - 字面量
+      - `var o = []`
+      - `var o = {}`
+      - `var o = /abc/`
+    - new
+      - `var o = new Object();`
+    - dom api
+      - `var o = document.createElement("div")`
+    - 通过内置对象
+      - `var o = Object.create()`
+      - `var o = Object.assign({},{name: "frank"})`
+      - `var o = JSON.parse("{}")`
+    - 通过装箱
+      - `var o = Object()`
+  - 访问属性
+    - `a.b`
+    - `a[b]`
+  - 定义属性
+    - `Object.defineProperty()`
+- 原型相关 API
+  - 根据指定的原型创建新对象，原型可以是 null
+    - `Object.create()`
+  - 获得原型
+    - `Object.getPrototypeOf()`
+  - 设置原型
+    - `Object.setPrototypeOf()`
+- new + class + extends 基于类的 API
+- new + function + prototype 模拟 Java 的 API，在现在最好不要用了
 
-## 分类
+## 对象分类
 
 - 宿主对象
 
@@ -131,15 +138,19 @@ ES6 引入 class 之后，基于类的编程方式也成为了 JavaScript 的官
 
   - 原生对象
 
-    通过语言本身的构造器对象创建的对象，我们可以用 new 运算创建新的对象，所以我们把这些新创建出来的对象称作原生对象。 无法用 class/extend 语法来继承。
+    通过语言本身的构造器对象创建的对象，我们可以用 new 运算创建新的对象，所以我们把这些新创建出来的对象称作原生对象。无法用 class/extend 语法来继承。
 
     - 函数对象
 
-      具有 [[call]] 私有字段的对象，可以去作为函数被调用。
+      除了一般对象的属性和原型，函数对象还具有 [[call]] 私有字段，可以去作为函数被调用。
+
+      我们用 JavaScript 中的 function、箭头函数、Function 构造器创建的对象，都具有 [[call]] 这个行为。
+
+      当我们用类似 `f()` 等语法把对象当作函数执行时，会访问到 [[call]] 这种行为。如果对象没有 [[call]] 这种行为，则会报错。
 
     - 构造器对象
 
-      具有私有字段 [[construct]] 的对象，可以作为构造器被调用。
+      除了一般对象的属性和原型，构造器对象还具有私有字段 [[construct]]，可以作为构造器被调用。
 
       执行 `new 构造器对象(参数)` 之后发生的事情:
 
