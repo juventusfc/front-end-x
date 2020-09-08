@@ -274,6 +274,46 @@ Completion Record 表示一个语句执行完之后的结果。由三个部分�
 - [[target]] 表示语句的目标，通常是一个 JavaScript 标签
   - label
 
+从 Completion Record 角度来说，语句还可以分为：
+
+- 普通语句
+
+  语句依次从前到后执行，没有任何分支或者重复执行逻辑。产生的都是 normal 类型。
+
+  - 声明类语句
+  - 表达式语句
+  - 空语句
+  - with 语句
+  - debugger 语句
+
+- 语句块
+
+  非 normal 的完成类型可以穿透复杂的语句嵌套结构，产生控制效果；normal 的完成类型依次执行
+
+- 控制型语句
+  - 对内部造成影响
+    - if
+    - switch
+    - 循环语句
+  - 对外部造成影响
+    - try
+    - continue
+    - break
+    - return
+    - throw
+- 带标签的语句
+
+  主要用于跳出多层循环
+
+  ```javascript
+  outer: while (true) {
+    inner: while (true) {
+      break outer;
+    }
+  }
+  console.log("finished");
+  ```
+
 ![control-statements](../assets/img/control-statements.png)
 
 穿透表示将非 normal 传递给外层，消费表示将非 normal 消化掉，接着执行对应的逻辑。
