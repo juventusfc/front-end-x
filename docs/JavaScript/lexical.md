@@ -1,6 +1,55 @@
 # 词法分析
 
-词法分析主要讲讲 262 标准中的 [lexical grammar](http://www.ecma-international.org/ecma-262/10.0/#sec-lexical-grammar)。由于 JavaScript 中，有除法 `/` 和正则 `//`，这就导致有两种可能；还由于有字符串模板 `${xxx}`和 `}`，这又是两种可能性，所以标准中写得很乱。为了便于理解，需要简单化一下。
+词法规定了语言的最小语义单元，也就是 token。词法分析的步骤是将输入的字符流根据规则，组合成一个个 token。词法分析的工具主要有**状态机**或**正则表达式**。
+
+词法分析阶段主要讲讲 262 标准中的 [lexical grammar](http://www.ecma-international.org/ecma-262/10.0/#sec-lexical-grammar)。
+
+JavaScript 的词法分析过程和其他语言大体类似，但是由于 JavaScript 中有除法 `/` 和正则 `//`，这就导致有两种可能；还由于有字符串模板 `${xxx}`和 `}`，这又是两种可能性，所以标准中写得很乱：
+
+1. 除法和正则表达式直接量冲突
+
+   除法的写法包括 `/` 和 `/=`，正则表达式直接量的写法为 `/abc/`，JavaScript 的词法分析器是无法区分这两点的。所以 JavaScript 定义了 2 组词法，然后靠语法分析传一个标志给词法分析器，以此决定使用哪套词法。
+
+2. 字符串模板中 `}` 的特殊性
+
+   字符串模板的一般写法为 `Hello, ${name}` 这种形式。理论上来说，`${}` 中可以写任何 JavaScript 表达式。但在这种情况下，由于 `}` 是 `${}` 的结尾，所以其中不能有 `}`。
+
+以上两种情况相乘就是四种词法定义：
+
+- InputElementDiv::
+  - WhiteSpace
+  - LineTerminator
+  - Comment
+  - Token
+    - CommonToken
+    - DivPunctuator
+    - RightBracePunctuator
+- InputElementRegExp::
+  - WhiteSpace
+  - LineTerminator
+  - Comment
+  - Token
+    - CommonToken
+    - RightBracePunctuator
+    - RegularExpressionLiteral
+- InputElementRegExpOrTemplateTail::
+  - WhiteSpace
+  - LineTerminator
+  - Comment
+  - Token
+    - CommonToken
+    - RegularExpressionLiteral
+    - TemplateSubstitutionTail
+- InputElementTemplateTail::
+  - WhiteSpace
+  - LineTerminator
+  - Comment
+  - Token
+    - CommonToken
+    - DivPunctuator
+    - TemplateSubstitutionTail
+
+为了便于理解，需要简单化一下。
 
 ## WhiteSpace 空白字符
 
@@ -33,40 +82,96 @@ JavaScript 支持 Unicode 中所有的空白字符。
 
 注释主要有两种：
 
-- `// ...` 单行注释
-- `/* ... */` 多行注释
+```javascript
+/* MultiLineCommentChars */
+
+// SingleLineCommentChars
+```
 
 ## Token 词
 
-token 就是除了上面三种，留下来的有效信息。
+token 就是除了上面三种，留下来的有效信息。可以使用[esprima](http://esprima.org/demo/parse.html)在线得到代码的 tokens。注意，Token 中是没有 ObjectLiteral 的，ObjectLiteral 在语法解析阶段解析。
 
-- IdentifierName 标识符名称，典型案例是我们使用的变量名，注意这里关键字也包含在内了。可以以美元符 `$`、下划线 `_` 或者 Unicode 字母开始，除了开始字符以外，IdentifierName 中还可以使用 Unicode 中的连接标记、数字、以及连接符号
-  - Keywords
-  - Identifier
-  - Future reserved keywords
-- Punctuator 符号，我们使用的运算符和大括号等符号
-- Literal
-  - Numeric Literal 数字直接量
-  - String Literal 字符串直接量，就是我们用单引号或者双引号引起来的直接量
-  - Template Literal 字符串模板，用反引号括起来的直接量 `a${b}c${d}e`
-  - Null Literals
-  - Boolean Literals
-  - Regular Expression Literal 正则表达式直接量 ，`/RegularExpressionBody/g`
+### IdentifierName 标识符名称
+
+典型案例是我们使用的变量名，注意这里关键字也包含在内了。可以以美元符 `$`、下划线 `_` 或者 Unicode 字母开始，除了开始字符以外，IdentifierName 中还可以使用 Unicode 中的连接标记、数字、以及连接符号。可以分为：
+
+- Keywords
+- Identifier
+- Future reserved keywords
+
+### Punctuator 符号
+
+我们使用的运算符和大括号等符号，包括：
+
+`{ ( ) [ ] . ... ; , < > <= >= == != === !== + - * % ** ++ -- << >> >>> & | ^ ! ~ && || ? : = += -= *= %= **= <<= >>= >>>= &= |= ^= => / /= }`
+
+### Literal 字面量
+
+- Numeric Literal 数字直接量
+- String Literal 字符串直接量，就是我们用单引号或者双引号引起来的直接量
+- Template Literal 字符串模板，用反引号括起来的直接量 `a${b}c${d}e`
+
+  Template 字符串模板比较有意思：
+
+  ```javascript
+  `a${b}c${d}e`;
+  ```
+
+  在词法阶段拆分为：
+
+  ```text
+  `a${
+  b
+  }c${
+  d
+  }e`
+  ```
+
+  模板还支持添加处理函数的写法。这时模板的各段会被拆开，传递给函数当参数：
+
+  ```javascript
+  function f() {
+    console.log(arguments);
+  }
+
+  var a = "world";
+  f`Hello ${a}!`; // [["Hello", "!"], world]
+  ```
+
+- Null Literals
+- Boolean Literals
+- Regular Expression Literal 正则表达式直接量有自己的语法规则，在词法阶段，仅会对它做简单解析。
+
+  ```javascript
+  /RegularExpressionBody/g;
+  ```
 
 ## 自动插入分号规则
 
-- 有换行符，且下一个符号是不符合语法的，那么就尝试插入分号
+JavaScript 语言提供了自动插入分号规则:
+
+- 有换行符，且下一个符号是不符合语法的，那么就尝试插入分号。
 
   ```text
   let a = 1
   void function(a){
-      console.log(a);
+    console.log(a);
   }(a);
   ```
 
-  上面，1void 不合法
+  上面的例子中，由于 1 后面加 void 是不符合语法的，所以会在 void 前尝试插入分号：
 
-- 有换行符，且语法中规定此处不能有换行符，那么就自动插入分号
+  ```text
+  let a = 1
+  ;void function(a){
+  console.log(a);
+  }(a);
+  ```
+
+- 有换行符，且语法中规定此处不能有换行符(no LineTerminator here 规则)，那么就在该换行符处自动插入分号。
+
+  ![no-LineTerminator-here](../assets/img/no-LineTerminator-here.jpg)
 
   ```text
   var a = 1, b = 1, c = 1;
@@ -75,19 +180,22 @@ token 就是除了上面三种，留下来的有效信息。
   b
   ++
   c
+
   ```
 
-  第二行 a 后面有换行符，`a 换行符 ++` 这种是不合法的，所以会在第二行 a 后面加上分号。这就是 no LineTerminator here 规则:
+  在上面这个例子中，a 后面有换行符，而后自增前是不能有换行符的，所以在 a 后面自动插入分号，最后的结果是：
 
-  - 带标签的 continue 语句，不能在 continue 后插入换行
-  - 带标签的 break 语句，不能在 break 后插入换行
-  - return 后不能插入换行
-  - 后自增、后自减运算符前不能插入换行
-  - throw 和 Exception 之间不能插入换行
-  - 凡是 async 关键字，后面都不能插入换行
-  - 箭头函数的箭头前，也不能插入换行
-  - yield 之后，不能插入换行
+  ```text
+  var a = 1, b = 1, c = 1;
+  a;
+  ++
+  b;
+  ++
+  c;
+  ```
 
-- 源代码结束处，不能形成完整的脚本或者模块结构，那么就自动插入分号
+- 源代码结束处，不能形成完整的脚本或者模块结构，那么就自动插入分号。
 
-在工作中，可以使用 `prettier` 等工具，配置全局的代码形式。
+关于写代码时候要不要写分号，根据项目的代码规范而定，可以使用 eslint/prettier 等工具进行自动化。尤雨溪曾经在知乎说：真正会导致上下行解析出问题的 token 有 5 种：以括号，方括号，正则开头的斜杠，加号，减号为行首。我还从没见过实际代码中用正则、加号、减号作为行首的情况，所以总结下来就是一句话：
+
+> 一行行首是括号或者方括号的时候加上分号就可以了，其他时候全部不需要。
